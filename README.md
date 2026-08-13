@@ -1,38 +1,43 @@
 # factory-demo
 
-Repo de demostración para **Foreman** (eve Software Factory). Tiene un bug intencional en el cálculo de descuentos; los tests lo detectan.
+Repo de demostración para **Foreman** (eve Software Factory). Incluye bugs intencionales en descuentos y un guion en dos actos: primero fix correcto pero convención equivocada, después fix con convención correcta.
 
-## El bug
+## Bugs
 
-`finalPrice` en `src/pricing.js` **suma** el descuento al precio en lugar de restarlo. Un cupón del 20% sobre $100 devuelve $120 en vez de $80.
+| Módulo | Función | Síntoma |
+|--------|---------|---------|
+| `src/pricing.js` | `finalPrice` | Suma el descuento → issue **#1** (acto 1) |
+| `src/shipping.js` | `shippingWithPromo` | Mismo patrón → issue **#2** (acto 2) |
+
+La convención del repo está en [`CONVENTIONS.md`](./CONVENTIONS.md): usar `applyDiscount` de `src/lib/applyDiscount.js`. El issue #1 no la menciona a propósito.
 
 ## Verificación local
 
 ```bash
-pnpm test   # falla hasta que se corrija el bug
+pnpm test   # falla hasta corregir los bugs
 ```
-
-Fix esperado: cambiar `basePrice + discountAmount` por `basePrice - discountAmount`.
 
 ## Demo con Foreman
 
-1. Publicá este repo en GitHub (por ejemplo `tu-usuario/factory-demo`).
-2. Apuntá el factory a ese repo: `FACTORY_REPO=tu-usuario/factory-demo` y `FACTORY_SETUP_COMMAND=pnpm install` (opcional; no hay deps, pero el comando es válido).
-3. Creá el issue desde [`DEMO_ISSUE.md`](./DEMO_ISSUE.md) o usá:
+Guion completo: [`DEMO_SCRIPT.md`](./DEMO_SCRIPT.md)
 
-   ```bash
-   gh issue create --repo tu-usuario/factory-demo \
-     --title "Coupon increases checkout total instead of lowering it" \
-     --body-file DEMO_ISSUE.md
-   ```
-
-4. Etiquetá el issue con `factory` (o mencioná a @Foreman) y dejá que el pipeline abra un draft PR.
+1. `FACTORY_REPO=ram4-dev/factory-demo` en el factory.
+2. **Acto 1:** label `factory` en [issue #1](https://github.com/ram4-dev/factory-demo/issues/1) → draft PR (fix inline, convención ignorada).
+3. **Corrección:** texto en [`DEMO_CORRECTION.md`](./DEMO_CORRECTION.md) → refactor + factory brain.
+4. **Acto 2:** crear issue #2 desde [`DEMO_ISSUE_2.md`](./DEMO_ISSUE_2.md) → label `factory` → PR con `applyDiscount`.
 
 ## Estructura
 
 ```text
+CONVENTIONS.md          # convención (applyDiscount)
+DEMO_SCRIPT.md          # guion dos actos
+DEMO_ISSUE.md           # cuerpo issue #1
+DEMO_ISSUE_2.md         # cuerpo issue #2
+DEMO_CORRECTION.md      # qué decirle a Foreman entre actos
 src/
-  pricing.js       # lógica con el bug
-  pricing.test.js  # tests que fallan hasta el fix
-DEMO_ISSUE.md      # cuerpo del issue listo para GitHub
+  lib/applyDiscount.js  # helper correcto (ya existe en main)
+  pricing.js            # bug acto 1
+  pricing.test.js
+  shipping.js           # bug acto 2
+  shipping.test.js
 ```
