@@ -1,0 +1,25 @@
+name: Factory demo bug
+description: Report the known pricing bug for the Foreman demo
+title: "Coupon increases checkout total instead of lowering it"
+labels:
+  - bug
+body:
+  - type: markdown
+    value: |
+      Template for the factory demo. For the live run, label the issue `factory` after creation.
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      value: |
+        1. Call `finalPrice(100, 20)` in `src/pricing.js`.
+        2. Result is 120 instead of 80.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      value: "20% off $100 should return 80."
+    validations:
+      required: true

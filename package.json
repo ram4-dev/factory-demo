@@ -1,0 +1,15 @@
+{
+  "name": "factory-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Demo repo for the eve Software Factory: one intentional pricing bug.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test src/**/*.test.js",
+    "check": "node --test src/**/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
